@@ -256,10 +256,17 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
     return segments;
   }, []);
 
-  // Trigger attack (360-degree direct stinger strike & pincer snap)
+  // Calculate dynamic physical tail reach from head/pincers into combat zone (~257px at default settings)
+  const getTailReach = useCallback((tailSegments: number, size: number) => {
+    return (240 + tailSegments * 7.5) * size + 50;
+  }, []);
+
+  // Trigger attack (360-degree direct stinger strike & pincer snap within enhanced combat reach)
   const triggerAttack = useCallback((targetX?: number, targetY?: number) => {
     const sim = simRef.current;
     
+    const maxTailReach = getTailReach(config.tailSegments, config.size);
+
     let finalTargetX = targetX;
     let finalTargetY = targetY;
 
@@ -275,16 +282,29 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
             closest = p;
           }
         }
-        if (minDist < 300 * config.size) {
+        // Auto-target closest prey if within physical tail striking reach!
+        if (minDist <= maxTailReach) {
           finalTargetX = closest.x;
           finalTargetY = closest.y;
         }
       }
     }
 
-    const target: Point = finalTargetX !== undefined && finalTargetY !== undefined
+    const rawTarget: Point = finalTargetX !== undefined && finalTargetY !== undefined
       ? { x: finalTargetX, y: finalTargetY }
       : { ...sim.targetPos };
+
+    // Clamp strike target to physical reach from head so stinger whips within natural reach
+    const dx = rawTarget.x - sim.headPos.x;
+    const dy = rawTarget.y - sim.headPos.y;
+    const strikeDist = Math.hypot(dx, dy);
+    const strikeAngle = Math.atan2(dy, dx);
+    const clampedDist = Math.min(strikeDist, maxTailReach);
+
+    const target: Point = {
+      x: sim.headPos.x + Math.cos(strikeAngle) * clampedDist,
+      y: sim.headPos.y + Math.sin(strikeAngle) * clampedDist,
+    };
 
     sim.pincerSnapProgress = 1;
     sim.pincerSnapVel = -0.32;
@@ -292,11 +312,6 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
     sim.isStriking = true;
     sim.strikeTimer = 0;
     sim.strikeTarget = target;
-
-    const dx = target.x - sim.headPos.x;
-    const dy = target.y - sim.headPos.y;
-    const strikeAngle = Math.atan2(dy, dx);
-    const strikeDist = Math.hypot(dx, dy);
 
     const recoilForce = Math.min(22, Math.max(10, strikeDist * 0.05)) * config.size;
     sim.bodyRecoil.x = -Math.cos(strikeAngle) * recoilForce;
@@ -337,7 +352,7 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
     if (onAttackTriggered) {
       onAttackTriggered();
     }
-  }, [config.size, config.soundEnabled, config.hapticEnabled, onAttackTriggered]);
+  }, [config.size, config.tailSegments, config.soundEnabled, config.hapticEnabled, onAttackTriggered]);
 
   // Spawn prey function
   const spawnPrey = useCallback(() => {
@@ -492,11 +507,43 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
     const elapsed = performance.now() - sim.pointerDownTime;
     const distMoved = Math.hypot(x - sim.pointerDownPos.x, y - sim.pointerDownPos.y);
 
-    if (!sim.hasDragged && elapsed < 280 && distMoved < 18) {
-      triggerAttack(x, y);
+    if (!sim.hasDragged && elapsed < 320 && distMoved < 22) {
+      const maxTailReach = getTailReach(config.tailSegments, config.size);
+      const dToTap = Math.hypot(x - sim.headPos.x, y - sim.headPos.y);
+
+      // Check if user tapped directly on or near an alive prey
+      const alivePrey = sim.preyList.filter(p => p.alive);
+      const tappedPrey = alivePrey.find(p => Math.hypot(p.x - x, p.y - y) < 48);
+
+      if (tappedPrey) {
+        const dPreyToHead = Math.hypot(tappedPrey.x - sim.headPos.x, tappedPrey.y - sim.headPos.y);
+        if (dPreyToHead <= maxTailReach) {
+          triggerAttack(tappedPrey.x, tappedPrey.y);
+        } else {
+          // Stalk towards prey if tapped from afar
+          sim.targetPos = { x: tappedPrey.x, y: tappedPrey.y };
+          sim.isPointerActive = true;
+          sim.lastPointerMoveTime = Date.now();
+        }
+      } else if (dToTap <= maxTailReach) {
+        // Tapped within combat radius: execute direct strike!
+        triggerAttack(x, y);
+      } else {
+        // If an alive prey is already within striking reach, any tap executes attack on it!
+        const closePrey = alivePrey.find(p => Math.hypot(p.x - sim.headPos.x, p.y - sim.headPos.y) <= maxTailReach);
+        if (closePrey) {
+          triggerAttack(closePrey.x, closePrey.y);
+        } else {
+          // Tapped far away in open space: guide scorpion towards the target!
+          sim.targetPos = { x, y };
+          sim.isPointerActive = true;
+          sim.lastPointerMoveTime = Date.now();
+        }
+      }
+    } else {
+      sim.isPointerActive = false;
     }
-    sim.isPointerActive = false;
-  }, [triggerAttack]);
+  }, [triggerAttack, getTailReach, config.tailSegments, config.size]);
 
   // Keyboard shortcut listener
   useEffect(() => {
@@ -644,6 +691,18 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
         prey.pulsePhase += dt * 4;
       });
 
+      // Close-quarters ambush: When the scorpion's head and pincers get right on top of prey
+      // Strictly active ONLY if config.autoWander is true! (oto gezinti kapalıyken asla oto saldırı yapmaz)
+      if (config.autoWander) {
+        alivePreys.forEach((prey) => {
+          const dHead = Math.hypot(sim.headPos.x - prey.x, sim.headPos.y - prey.y);
+          const pincerReach = 42 * config.size + 10;
+          if (dHead < pincerReach && !sim.isStriking) {
+            triggerAttack(prey.x, prey.y);
+          }
+        });
+      }
+
       // --- 2. TARGET SELECTION (AUTO-WANDER / PREY STALKING) ---
       let effectiveTarget = { ...sim.targetPos };
 
@@ -660,7 +719,8 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
           }
           effectiveTarget = { x: closest.x, y: closest.y };
 
-          if (minDist < 140 * config.size && !sim.isStriking) {
+          const maxTailReach = getTailReach(config.tailSegments, config.size);
+          if (minDist <= maxTailReach && !sim.isStriking) {
             triggerAttack(closest.x, closest.y);
           }
         } else {
@@ -936,10 +996,8 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
           sim.strikeTarget.y - tailRoot.y,
           sim.strikeTarget.x - tailRoot.x
         );
-        const strikeReach = Math.min(
-          dist(tailRoot, sim.strikeTarget),
-          tailCount * tailSegLen * 1.15
-        ) * strikeFrac;
+        const distToTarget = dist(tailRoot, sim.strikeTarget);
+        const strikeReach = distToTarget * strikeFrac;
 
         for (let i = 0; i < tailCount; i++) {
           const seg = sim.tailSegments[i];
@@ -947,7 +1005,7 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
           const u = (i + 1) / tailCount;
           const currentD = u * strikeReach;
 
-          const arcOffset = Math.sin(u * Math.PI) * (20 * config.size) * (1 - strikeFrac);
+          const arcOffset = Math.sin(u * Math.PI) * (22 * config.size) * (1 - strikeFrac);
           const perpAngle = strikeAngle + Math.PI * 0.5;
 
           seg.x = tailRoot.x + Math.cos(strikeAngle) * currentD + Math.cos(perpAngle) * arcOffset;
@@ -955,14 +1013,17 @@ export const ScorpionCanvas = React.forwardRef<ScorpionCanvasHandle, ScorpionCan
           seg.angle = strikeAngle;
         }
 
-        // Prey hit detection
+        // Prey hit detection - requires physical contact with the stinger tip or impact zone at apex
         const tipNode = sim.tailSegments[sim.tailSegments.length - 1];
         if (tipNode) {
           alivePreys.forEach((prey) => {
             const dTip = Math.hypot(tipNode.x - prey.x, tipNode.y - prey.y);
+            const physicalHitRadius = 30 * config.size + 18;
+            const isAtApex = sim.strikeTimer >= 0.30 && sim.strikeTimer <= 0.70;
             const dTarget = Math.hypot(sim.strikeTarget.x - prey.x, sim.strikeTarget.y - prey.y);
 
-            if (dTip < 34 * config.size || (strikeFrac > 0.6 && dTarget < 30 * config.size)) {
+            // Kill if the stinger tip physically intersects the prey, or strike apex impacts target
+            if (dTip < physicalHitRadius || (isAtApex && dTarget < physicalHitRadius)) {
               prey.alive = false;
 
               if (config.soundEnabled) {

@@ -10,10 +10,13 @@ import {
   RotateCcw,
   Volume2,
   VolumeX,
+  Vibrate,
+  VibrateOff,
   Compass,
   Moon,
   Sun,
-  Crosshair,
+  Save,
+  Check,
   Sparkles,
   Bug,
 } from 'lucide-react';
@@ -23,7 +26,7 @@ interface ControlsDrawerProps {
   config: ScorpionConfig;
   onChange: (updated: Partial<ScorpionConfig>) => void;
   onReset: () => void;
-  onTriggerAttack: () => void;
+  onSave?: () => void;
   onSpawnPrey: () => void;
   preyCount?: number;
   stats?: { fps: number; speed: number; state: string };
@@ -35,13 +38,24 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
   config,
   onChange,
   onReset,
-  onTriggerAttack,
+  onSave,
   onSpawnPrey,
   preyCount,
   stats,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const isLight = config.invertTheme;
+
+  const handleSave = () => {
+    if (onSave) {
+      onSave();
+    }
+    setIsSaved(true);
+    setTimeout(() => {
+      setIsSaved(false);
+    }, 2000);
+  };
 
   return (
     <>
@@ -68,20 +82,6 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
           aria-label="Kontrol Araç Çubuğu"
           className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 sm:gap-2 pointer-events-auto"
         >
-          {/* Quick Attack Button (Saldır) */}
-          <button
-            onClick={onTriggerAttack}
-            className={`w-full sm:w-auto min-h-[42px] sm:min-h-[44px] px-3.5 sm:px-4 py-2 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold tracking-wide transition-all active:scale-95 shadow-lg ${
-              isLight
-                ? 'bg-zinc-900 text-white hover:bg-zinc-800'
-                : 'bg-red-600 text-white hover:bg-red-500 shadow-red-600/30'
-            }`}
-            title="Saldırı Gerçekleştir (Kıskaç & 360° İğne)"
-            aria-label="Saldır"
-          >
-            <Crosshair className="w-4 h-4 text-white shrink-0" />
-            <span>Saldır</span>
-          </button>
 
           {/* Spawn Prey Button (Av Ekle) */}
           <button
@@ -103,13 +103,13 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
             )}
           </button>
 
-          {/* Utility Buttons: Grid on mobile, inline on desktop */}
-          <div className="grid grid-cols-3 sm:flex sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+          {/* Utility Buttons: Grid on mobile (4 columns), inline on desktop */}
+          <div className="grid grid-cols-4 sm:flex sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
             {/* Sound Toggle */}
             <button
               onClick={() => onChange({ soundEnabled: !config.soundEnabled })}
               className="min-h-[42px] min-w-[42px] sm:min-h-[44px] sm:min-w-[44px] flex items-center justify-center rounded-xl bg-black/80 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-colors active:scale-95 shadow-md"
-              title={config.soundEnabled ? 'Sesi Kapat' : 'Sesi Aç'}
+              title={config.soundEnabled ? 'Sesi Kapat (M)' : 'Sesi Aç (M)'}
               aria-label="Ses Ayarı"
             >
               {config.soundEnabled ? (
@@ -119,11 +119,25 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
               )}
             </button>
 
+            {/* Vibration / Haptic Toggle */}
+            <button
+              onClick={() => onChange({ hapticEnabled: !config.hapticEnabled })}
+              className="min-h-[42px] min-w-[42px] sm:min-h-[44px] sm:min-w-[44px] flex items-center justify-center rounded-xl bg-black/80 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-colors active:scale-95 shadow-md"
+              title={config.hapticEnabled ? 'Titreşimi Kapat (V)' : 'Titreşimi Aç (V)'}
+              aria-label="Titreşim Ayarı"
+            >
+              {config.hapticEnabled ? (
+                <Vibrate className="w-4 h-4 text-red-400" />
+              ) : (
+                <VibrateOff className="w-4 h-4 text-zinc-500" />
+              )}
+            </button>
+
             {/* Theme Switcher */}
             <button
               onClick={() => onChange({ invertTheme: !config.invertTheme })}
               className="min-h-[42px] min-w-[42px] sm:min-h-[44px] sm:min-w-[44px] flex items-center justify-center rounded-xl bg-black/80 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-colors active:scale-95 shadow-md"
-              title={isLight ? 'Karanlık Moda Geç' : 'Aydınlık Kemik Moduna Geç'}
+              title={isLight ? 'Karanlık Moda Geç (T)' : 'Aydınlık Kemik Moduna Geç (T)'}
               aria-label="Tema Değiştir"
             >
               {isLight ? (
@@ -338,6 +352,34 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
                     className="w-5 h-5 accent-red-500 rounded cursor-pointer"
                   />
                 </label>
+
+                {/* Haptic Vibration Toggle */}
+                <label className="flex items-center justify-between cursor-pointer min-h-[44px]">
+                  <div className="flex items-center gap-2.5">
+                    <Vibrate className="w-4 h-4 text-red-400" />
+                    <span className="text-xs text-zinc-300">Dokunsal Titreşim (Haptik)</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={config.hapticEnabled}
+                    onChange={(e) => onChange({ hapticEnabled: e.target.checked })}
+                    className="w-5 h-5 accent-red-500 rounded cursor-pointer"
+                  />
+                </label>
+
+                {/* Sound FX Toggle */}
+                <label className="flex items-center justify-between cursor-pointer min-h-[44px]">
+                  <div className="flex items-center gap-2.5">
+                    <Volume2 className="w-4 h-4 text-red-400" />
+                    <span className="text-xs text-zinc-300">Web Audio Ses Efektleri</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={config.soundEnabled}
+                    onChange={(e) => onChange({ soundEnabled: e.target.checked })}
+                    className="w-5 h-5 accent-red-500 rounded cursor-pointer"
+                  />
+                </label>
               </div>
             </div>
 
@@ -352,11 +394,25 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
                   <span>Sıfırla</span>
                 </button>
                 <button
-                  onClick={onTriggerAttack}
-                  className="min-h-[44px] px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md shadow-red-900/40"
+                  onClick={handleSave}
+                  className={`min-h-[44px] px-4 py-2.5 rounded-xl text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md ${
+                    isSaved
+                      ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40 ring-2 ring-emerald-400'
+                      : 'bg-red-600 hover:bg-red-500 shadow-red-900/40'
+                  }`}
+                  title="Mevcut simülasyon ayarlarını kaydet"
                 >
-                  <Crosshair className="w-3.5 h-3.5" />
-                  <span>Saldır</span>
+                  {isSaved ? (
+                    <>
+                      <Check className="w-4 h-4 text-white shrink-0 animate-scale" />
+                      <span>Kaydedildi!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-3.5 h-3.5 shrink-0" />
+                      <span>Kaydet</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

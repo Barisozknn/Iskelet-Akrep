@@ -25,12 +25,12 @@ export interface ScorpionConfig {
 }
 
 export const DEFAULT_CONFIG: ScorpionConfig = {
-  speed: 1.2,
-  size: 1.0,
-  lineWidth: 1.6,
-  stingerStrikeSpeed: 1.5,
-  legCount: 8,
-  tailSegments: 9,
+  speed: 2.5,
+  size: 0.6,
+  lineWidth: 1.0,
+  stingerStrikeSpeed: 2.5,
+  legCount: 20,
+  tailSegments: 14,
   autoWander: false,
   invertTheme: false,
   soundEnabled: true,

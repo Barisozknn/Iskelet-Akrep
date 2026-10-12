@@ -8,7 +8,7 @@ import { ScorpionCanvas, ScorpionCanvasHandle } from './components/ScorpionCanva
 import { ControlsDrawer } from './components/ControlsDrawer';
 import { ScorpionConfig, DEFAULT_CONFIG } from './lib/scorpionMath';
 
-const STORAGE_KEY = 'procedural_scorpion_config_v1';
+const STORAGE_KEY = 'iskelet_akrep_config_v2';
 
 export default function App() {
   const canvasRef = useRef<ScorpionCanvasHandle | null>(null);
@@ -49,18 +49,22 @@ export default function App() {
     }
   }, [config.invertTheme]);
 
-  // Persist config changes to localStorage
+  // Update in-memory config
   const updateConfig = useCallback((updated: Partial<ScorpionConfig>) => {
     setConfig((prev) => {
       const next = { ...prev, ...updated };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        // Ignored
-      }
       return next;
     });
   }, []);
+
+  // Explicitly persist config to localStorage
+  const saveConfig = useCallback(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+    } catch {
+      // Ignored
+    }
+  }, [config]);
 
   const resetConfig = useCallback(() => {
     setConfig(DEFAULT_CONFIG);
@@ -88,12 +92,14 @@ export default function App() {
         updateConfig({ invertTheme: !config.invertTheme });
       } else if (e.key === 'm' || e.key === 'M') {
         updateConfig({ soundEnabled: !config.soundEnabled });
+      } else if (e.key === 'v' || e.key === 'V') {
+        updateConfig({ hapticEnabled: !config.hapticEnabled });
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [config.invertTheme, config.soundEnabled, updateConfig]);
+  }, [config.invertTheme, config.soundEnabled, config.hapticEnabled, updateConfig]);
 
   return (
     <main
@@ -126,12 +132,9 @@ export default function App() {
         config={config}
         onChange={updateConfig}
         onReset={resetConfig}
+        onSave={saveConfig}
         onSpawnPrey={() => canvasRef.current?.spawnPrey()}
         preyCount={preyCount}
-        onTriggerAttack={() => {
-          // Trigger attack via keyboard event dispatch for space
-          window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space' }));
-        }}
         stats={stats}
       />
     </main>
