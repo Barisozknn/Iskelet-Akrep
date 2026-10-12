@@ -1,20 +1,28 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# İskelet Akrep 🦂
 
-# Run and deploy your AI Studio app
+Ters kinematik (IK - Inverse Kinematics) ve metakronal dalga yürüyüşü ile çalışan, fare ve dokunmatik hareketleri pürüzsüz takip eden minimalist interaktif akrep simülasyonu.
 
-This contains everything you need to run your app locally.
+## Özellikler
 
-View your app in AI Studio: https://ai.studio/apps/b31932f2-d53a-4d7b-88b4-31634ba2e4e2
+- **PWA (Progressive Web App) Desteği**: Masaüstünde ve mobilde bağımsız uygulama (standalone app) olarak ana ekrana yüklenebilir, çevrimdışı (offline) çalışabilir.
+- **Prosedürel Yürüyüş & Eklemler**: Gerçekçi eklem fiziği ve ayarlanabilir bacak sayısı (6 - 20 bacak).
+- **Etkileşim**: Dokunma, sürükleme, fare takibi, av fırlatma ve 360° kuyruk iğnesi saldırısı.
+- **Kişiselleştirme**: Hız, boyut, çizgi kalınlığı, iğne hızı, omurga/kuyruk segmenti ve neon parlama ayarları.
+- **Ses & Hissiyat**: Web Audio API ile prosedürel ses efektleri ve titreşim desteği.
 
-## Run Locally
+## Geliştirme
 
-**Prerequisites:**  Node.js
+```bash
+# Bağımlılıkları yükleyin
+npm install
 
+# Geliştirme sunucusunu başlatın
+npm run dev
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# Üretim derlemesi
+npm run build
+```
+
+## Dağıtım (Vercel)
+
+Proje Vite tabanlı bir SPA ve PWA'dır. Vercel'e doğrudan GitHub reposu bağlanarak otomatik olarak dağıtılabilir (`dist/` çıktısı ile çalışır).

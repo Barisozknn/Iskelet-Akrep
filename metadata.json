@@ -1,6 +1,0 @@
-{
-  "name": "Prosedürel İskelet Akrep",
-  "description": "Pürüzsüz ters kinematik ile fareyi ve dokunmaları takip eden, minimalist beyaz iskelet hatlı ve animasyonlu kıskaçlı interaktif akrep simülasyonu.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

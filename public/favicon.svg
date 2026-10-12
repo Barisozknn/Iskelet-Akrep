@@ -1,0 +1,344 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient (Deep Indigo Navy to Midnight Slate) -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141c2e"/>
+      <stop offset="50%" stop-color="#0e1526"/>
+      <stop offset="100%" stop-color="#080d1a"/>
+    </linearGradient>
+
+    <!-- Beveled Edge Highlight Gradient -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b4d6e" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <!-- Crimson Neon Bloom Filter -->
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.5" result="blur1"/>
+      <feGaussianBlur stdDeviation="8" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Intense Stinger Radiance Filter -->
+    <filter id="stingerRadiance" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5" result="glow1"/>
+      <feGaussianBlur stdDeviation="14" result="glow2"/>
+      <feMerge>
+        <feMergeNode in="glow2"/>
+        <feMergeNode in="glow1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft Ambient Leg Aura -->
+    <filter id="legAura" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Continuous Curvature Squircle Tile with Anti-Aliased Corner Smoothing -->
+  <path d="M 162 26
+           C 74 26, 26 74, 26 162
+           L 26 350
+           C 26 438, 74 486, 162 486
+           L 350 486
+           C 438 486, 486 438, 486 350
+           L 486 162
+           C 486 74, 438 26, 350 26
+           Z"
+        fill="url(#bgGrad)"
+        stroke="url(#rimGrad)"
+        stroke-width="2.5"
+        shape-rendering="geometricPrecision"/>
+
+  <!-- Subtle Inner Ambient Shadow / Vignette -->
+  <path d="M 162 28
+           C 76 28, 28 76, 28 162
+           L 28 350
+           C 28 436, 76 484, 162 484
+           L 350 484
+           C 436 484, 484 436, 484 350
+           L 484 162
+           C 484 76, 436 28, 350 28
+           Z"
+        fill="none"
+        stroke="#0b101c"
+        stroke-width="3"
+        opacity="0.6"/>
+
+  <!-- ==================== SCORPION SKELETON ==================== -->
+
+  <!-- 1. Soft Red Bloom Underlay for all joints and limbs -->
+  <g filter="url(#legAura)" opacity="0.45">
+    <!-- Knee & Foot Glow Auras -->
+    <!-- Pair 1 -->
+    <circle cx="212" cy="148" r="7" fill="#ef4444"/>
+    <circle cx="208" cy="172" r="7" fill="#ef4444"/>
+    <circle cx="300" cy="148" r="7" fill="#ef4444"/>
+    <circle cx="304" cy="172" r="7" fill="#ef4444"/>
+    <!-- Pair 2 -->
+    <circle cx="198" cy="172" r="7.5" fill="#ef4444"/>
+    <circle cx="195" cy="204" r="7.5" fill="#ef4444"/>
+    <circle cx="314" cy="172" r="7.5" fill="#ef4444"/>
+    <circle cx="317" cy="204" r="7.5" fill="#ef4444"/>
+    <!-- Pair 3 -->
+    <circle cx="188" cy="205" r="8" fill="#ef4444"/>
+    <circle cx="186" cy="240" r="8" fill="#ef4444"/>
+    <circle cx="324" cy="205" r="8" fill="#ef4444"/>
+    <circle cx="326" cy="240" r="8" fill="#ef4444"/>
+    <!-- Pair 4 -->
+    <circle cx="185" cy="248" r="8" fill="#ef4444"/>
+    <circle cx="188" cy="282" r="8" fill="#ef4444"/>
+    <circle cx="327" cy="248" r="8" fill="#ef4444"/>
+    <circle cx="324" cy="282" r="8" fill="#ef4444"/>
+    <!-- Pair 5 -->
+    <circle cx="192" cy="275" r="8" fill="#ef4444"/>
+    <circle cx="198" cy="312" r="8" fill="#ef4444"/>
+    <circle cx="320" cy="275" r="8" fill="#ef4444"/>
+    <circle cx="314" cy="312" r="8" fill="#ef4444"/>
+    <!-- Pair 6 -->
+    <circle cx="198" cy="300" r="7.5" fill="#ef4444"/>
+    <circle cx="206" cy="336" r="7.5" fill="#ef4444"/>
+    <circle cx="314" cy="300" r="7.5" fill="#ef4444"/>
+    <circle cx="306" cy="336" r="7.5" fill="#ef4444"/>
+    <!-- Pair 7 -->
+    <circle cx="210" cy="324" r="7" fill="#ef4444"/>
+    <circle cx="218" cy="358" r="7" fill="#ef4444"/>
+    <circle cx="302" cy="324" r="7" fill="#ef4444"/>
+    <circle cx="294" cy="358" r="7" fill="#ef4444"/>
+    <!-- Pair 8 -->
+    <circle cx="224" cy="342" r="6.5" fill="#ef4444"/>
+    <circle cx="222" cy="376" r="6.5" fill="#ef4444"/>
+    <circle cx="288" cy="342" r="6.5" fill="#ef4444"/>
+    <circle cx="290" cy="376" r="6.5" fill="#ef4444"/>
+    <!-- Pedipalp tips -->
+    <circle cx="230" cy="88" r="8" fill="#ef4444"/>
+    <circle cx="240" cy="88" r="8" fill="#ef4444"/>
+    <circle cx="272" cy="88" r="8" fill="#ef4444"/>
+    <circle cx="282" cy="88" r="8" fill="#ef4444"/>
+  </g>
+
+  <!-- 2. Walking Legs (White Skeletal Bones) -->
+  <g stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Pair 1 -->
+    <line x1="244" y1="184" x2="212" y2="148"/>
+    <line x1="212" y1="148" x2="208" y2="172"/>
+    <line x1="268" y1="184" x2="300" y2="148"/>
+    <line x1="300" y1="148" x2="304" y2="172"/>
+
+    <!-- Pair 2 -->
+    <line x1="243" y1="201" x2="198" y2="172"/>
+    <line x1="198" y1="172" x2="195" y2="204"/>
+    <line x1="269" y1="201" x2="314" y2="172"/>
+    <line x1="314" y1="172" x2="317" y2="204"/>
+
+    <!-- Pair 3 -->
+    <line x1="242" y1="218" x2="188" y2="205"/>
+    <line x1="188" y1="205" x2="186" y2="240"/>
+    <line x1="270" y1="218" x2="324" y2="205"/>
+    <line x1="324" y1="205" x2="326" y2="240"/>
+
+    <!-- Pair 4 -->
+    <line x1="242" y1="235" x2="185" y2="248"/>
+    <line x1="185" y1="248" x2="188" y2="282"/>
+    <line x1="270" y1="235" x2="327" y2="248"/>
+    <line x1="327" y1="248" x2="324" y2="282"/>
+
+    <!-- Pair 5 (Crossing Metachronal Arches) -->
+    <line x1="242" y1="252" x2="192" y2="275"/>
+    <line x1="192" y1="275" x2="198" y2="312"/>
+    <line x1="270" y1="252" x2="320" y2="275"/>
+    <line x1="320" y1="275" x2="314" y2="312"/>
+
+    <!-- Pair 6 -->
+    <line x1="243" y1="269" x2="198" y2="300"/>
+    <line x1="198" y1="300" x2="206" y2="336"/>
+    <line x1="269" y1="269" x2="314" y2="300"/>
+    <line x1="314" y1="300" x2="306" y2="336"/>
+
+    <!-- Pair 7 -->
+    <line x1="244" y1="286" x2="210" y2="324"/>
+    <line x1="210" y1="324" x2="218" y2="358"/>
+    <line x1="268" y1="286" x2="302" y2="324"/>
+    <line x1="302" y1="324" x2="294" y2="358"/>
+
+    <!-- Pair 8 -->
+    <line x1="245" y1="303" x2="224" y2="342"/>
+    <line x1="224" y1="342" x2="222" y2="376"/>
+    <line x1="267" y1="303" x2="288" y2="342"/>
+    <line x1="288" y1="342" x2="290" y2="376"/>
+  </g>
+
+  <!-- 3. Pedipalps (Front Claws reaching upward) -->
+  <g stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Left Arm -->
+    <line x1="246" y1="150" x2="238" y2="128"/>
+    <line x1="238" y1="128" x2="235" y2="112"/>
+    <!-- Left Hand Ellipse -->
+    <ellipse cx="235" cy="106" rx="4.5" ry="7" fill="#0d1527" stroke="#ffffff" stroke-width="2"/>
+    <!-- Left Pincers -->
+    <path d="M 233 100 C 228 95, 227 90, 230 88"/>
+    <path d="M 237 100 C 242 95, 243 90, 240 88"/>
+
+    <!-- Right Arm -->
+    <line x1="266" y1="150" x2="274" y2="128"/>
+    <line x1="274" y1="128" x2="277" y2="112"/>
+    <!-- Right Hand Ellipse -->
+    <ellipse cx="277" cy="106" rx="4.5" ry="7" fill="#0d1527" stroke="#ffffff" stroke-width="2"/>
+    <!-- Right Pincers -->
+    <path d="M 275 100 C 270 95, 269 90, 272 88"/>
+    <path d="M 279 100 C 284 95, 285 90, 282 88"/>
+  </g>
+
+  <!-- 4. Cephalothorax (Head Shell at Top) -->
+  <polygon points="256,145 240,154 240,173 256,177 272,173 272,154"
+           fill="#0d1527"
+           stroke="#ffffff"
+           stroke-width="2.5"
+           stroke-linejoin="round"/>
+  <line x1="240" y1="154" x2="272" y2="154" stroke="#a1a1aa" stroke-width="1.6"/>
+  <line x1="256" y1="145" x2="256" y2="177" stroke="#ffffff" stroke-width="2"/>
+
+  <!-- 5. Body Vertebrae (Translucent Circular Rings along Spine) -->
+  <g stroke="#ffffff" stroke-width="1.8" fill="#0c1322" opacity="0.9">
+    <circle cx="256" cy="184" r="12.5"/>
+    <circle cx="256" cy="201" r="13.2"/>
+    <circle cx="256" cy="218" r="13.8"/>
+    <circle cx="256" cy="235" r="14.0"/>
+    <circle cx="256" cy="252" r="13.8"/>
+    <circle cx="256" cy="269" r="13.2"/>
+    <circle cx="256" cy="286" r="12.2"/>
+    <circle cx="256" cy="303" r="11.0"/>
+  </g>
+
+  <!-- Central Spine Cord Line Passing Through Entire Body & Tail -->
+  <line x1="256" y1="145" x2="256" y2="408" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Rib Transverse Connectors across Vertebrae -->
+  <g stroke="#a1a1aa" stroke-width="1.5" opacity="0.8">
+    <line x1="244" y1="184" x2="268" y2="184"/>
+    <line x1="243" y1="201" x2="269" y2="201"/>
+    <line x1="242" y1="218" x2="270" y2="218"/>
+    <line x1="242" y1="235" x2="270" y2="235"/>
+    <line x1="242" y1="252" x2="270" y2="252"/>
+    <line x1="243" y1="269" x2="269" y2="269"/>
+    <line x1="244" y1="286" x2="268" y2="286"/>
+    <line x1="245" y1="303" x2="267" y2="303"/>
+  </g>
+
+  <!-- 6. Tail (Articulated Chain of Decreasing Rings Extending Down) -->
+  <g stroke="#ffffff" stroke-width="1.8" fill="#0c1322">
+    <circle cx="256" cy="318" r="9.2"/>
+    <circle cx="256" cy="331" r="8.4"/>
+    <circle cx="256" cy="343" r="7.6"/>
+    <circle cx="256" cy="354" r="7.0"/>
+    <circle cx="256" cy="364" r="6.4"/>
+    <circle cx="256" cy="374" r="5.8"/>
+    <circle cx="256" cy="383" r="5.2"/>
+    <circle cx="256" cy="392" r="4.6"/>
+    <circle cx="256" cy="400" r="4.0"/>
+    <circle cx="256" cy="408" r="3.5"/>
+  </g>
+
+  <!-- 7. Joint Red Neon Pivot Nodes (Glowing Red Points on Knees, Feet & Vertebrae) -->
+  <g filter="url(#neonGlow)">
+    <!-- Eye Nodes -->
+    <circle cx="251" cy="160" r="2.2" fill="#ef4444"/>
+    <circle cx="261" cy="160" r="2.2" fill="#ef4444"/>
+
+    <!-- Pincer Tips -->
+    <circle cx="230" cy="88" r="2.6" fill="#ef4444"/>
+    <circle cx="240" cy="88" r="2.6" fill="#ef4444"/>
+    <circle cx="272" cy="88" r="2.6" fill="#ef4444"/>
+    <circle cx="282" cy="88" r="2.6" fill="#ef4444"/>
+
+    <!-- Arm Elbows -->
+    <circle cx="238" cy="128" r="2.2" fill="#ef4444"/>
+    <circle cx="274" cy="128" r="2.2" fill="#ef4444"/>
+
+    <!-- Body Vertebrae Centers -->
+    <circle cx="256" cy="184" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="201" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="218" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="235" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="252" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="269" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="286" r="2.6" fill="#ef4444"/>
+    <circle cx="256" cy="303" r="2.6" fill="#ef4444"/>
+
+    <!-- Knee Joints (Red Pivot Condyles) -->
+    <circle cx="212" cy="148" r="2.8" fill="#ef4444"/>
+    <circle cx="300" cy="148" r="2.8" fill="#ef4444"/>
+    <circle cx="198" cy="172" r="2.8" fill="#ef4444"/>
+    <circle cx="314" cy="172" r="2.8" fill="#ef4444"/>
+    <circle cx="188" cy="205" r="2.8" fill="#ef4444"/>
+    <circle cx="324" cy="205" r="2.8" fill="#ef4444"/>
+    <circle cx="185" cy="248" r="2.8" fill="#ef4444"/>
+    <circle cx="327" cy="248" r="2.8" fill="#ef4444"/>
+    <circle cx="192" cy="275" r="2.8" fill="#ef4444"/>
+    <circle cx="320" cy="275" r="2.8" fill="#ef4444"/>
+    <circle cx="198" cy="300" r="2.8" fill="#ef4444"/>
+    <circle cx="314" cy="300" r="2.8" fill="#ef4444"/>
+    <circle cx="210" cy="324" r="2.8" fill="#ef4444"/>
+    <circle cx="302" cy="324" r="2.8" fill="#ef4444"/>
+    <circle cx="224" cy="342" r="2.8" fill="#ef4444"/>
+    <circle cx="288" cy="342" r="2.8" fill="#ef4444"/>
+
+    <!-- Foot Claw Tips (Red Neon Tips) -->
+    <circle cx="208" cy="172" r="2.6" fill="#ef4444"/>
+    <circle cx="304" cy="172" r="2.6" fill="#ef4444"/>
+    <circle cx="195" cy="204" r="2.6" fill="#ef4444"/>
+    <circle cx="317" cy="204" r="2.6" fill="#ef4444"/>
+    <circle cx="186" cy="240" r="2.6" fill="#ef4444"/>
+    <circle cx="326" cy="240" r="2.6" fill="#ef4444"/>
+    <circle cx="188" cy="282" r="2.6" fill="#ef4444"/>
+    <circle cx="324" cy="282" r="2.6" fill="#ef4444"/>
+    <circle cx="198" cy="312" r="2.6" fill="#ef4444"/>
+    <circle cx="314" cy="312" r="2.6" fill="#ef4444"/>
+    <circle cx="206" cy="336" r="2.6" fill="#ef4444"/>
+    <circle cx="306" cy="336" r="2.6" fill="#ef4444"/>
+    <circle cx="218" cy="358" r="2.6" fill="#ef4444"/>
+    <circle cx="294" cy="358" r="2.6" fill="#ef4444"/>
+    <circle cx="222" cy="376" r="2.6" fill="#ef4444"/>
+    <circle cx="290" cy="376" r="2.6" fill="#ef4444"/>
+
+    <!-- Tail Center Dots -->
+    <circle cx="256" cy="318" r="2.0" fill="#ef4444"/>
+    <circle cx="256" cy="331" r="2.0" fill="#ef4444"/>
+    <circle cx="256" cy="343" r="1.8" fill="#ef4444"/>
+    <circle cx="256" cy="354" r="1.8" fill="#ef4444"/>
+    <circle cx="256" cy="364" r="1.6" fill="#ef4444"/>
+    <circle cx="256" cy="374" r="1.5" fill="#ef4444"/>
+    <circle cx="256" cy="383" r="1.4" fill="#ef4444"/>
+    <circle cx="256" cy="392" r="1.3" fill="#ef4444"/>
+    <circle cx="256" cy="400" r="1.2" fill="#ef4444"/>
+    <circle cx="256" cy="408" r="1.2" fill="#ef4444"/>
+  </g>
+
+  <!-- 8. Deadly Stinger Bulb & Aculeus with Intense Ruby Radiance -->
+  <g filter="url(#stingerRadiance)">
+    <!-- Ambient Stinger Aura -->
+    <circle cx="258" cy="425" r="14" fill="#ef4444" opacity="0.4"/>
+    <!-- Venom Bulb (Telson) -->
+    <path d="M 256 411 C 251 416, 252 426, 258 428 C 263 427, 264 418, 256 411 Z"
+          fill="#ef4444"
+          stroke="#ffffff"
+          stroke-width="1.8"/>
+    <!-- Curved Deadly Stinger Needle (Aculeus) -->
+    <path d="M 258 428 Q 263 434, 270 435"
+          stroke="#ff4d4d"
+          stroke-width="3"
+          stroke-linecap="round"
+          fill="none"/>
+    <circle cx="270" cy="435" r="2.2" fill="#ffffff"/>
+  </g>
+</svg>

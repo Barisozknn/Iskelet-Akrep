@@ -51,7 +51,7 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
         <div className="flex items-center gap-2.5 bg-black/80 backdrop-blur-md px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-white/10 pointer-events-auto shadow-xl">
           <div className="flex flex-col">
             <span className="text-xs sm:text-sm font-semibold tracking-tight text-white whitespace-nowrap">
-              Prosedürel İskelet Akrep
+              İskelet Akrep
             </span>
             <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-zinc-400 font-mono tabular-nums">
               <span className="text-red-400 font-medium truncate max-w-[85px] sm:max-w-none">{stats?.state ?? 'Hazır'}</span>
@@ -150,13 +150,6 @@ export const ControlsDrawer: React.FC<ControlsDrawerProps> = ({
         </div>
       </header>
 
-      {/* Floating Guidance Prompt (Bottom Center on zero interaction) */}
-      <footer className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none max-w-[92vw]">
-        <div className="bg-black/80 backdrop-blur-md border border-white/10 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs text-zinc-300 flex items-center gap-2 shadow-2xl text-center">
-          <span className="w-2 h-2 rounded-full bg-red-500 shadow-sm shadow-red-500 animate-pulse shrink-0" />
-          <span className="truncate">Dokun & Sürükle: Takip Et · Hızlı Dokun: 360° Saldır</span>
-        </div>
-      </footer>
 
       {/* Slide-out Settings Drawer / Side Modal */}
       {isOpen && (
